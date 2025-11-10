@@ -4,34 +4,37 @@ from library_service import get_patron_status_report
 def test_get_patron_status_report_not_implemented():
     """Test that patron status report is not yet implemented."""
     result = get_patron_status_report("123456")
-    
     assert isinstance(result, dict)
-    assert len(result) == 0
+    # Expecting standard empty report structure
+    assert 'patron_id' in result
+    assert 'currently_borrowed_books' in result
+    assert len(result['currently_borrowed_books']) == 0
 
 def test_get_patron_status_report_invalid_patron_id():
     """Test patron status report with invalid patron ID."""
     result = get_patron_status_report("")
-    
     assert isinstance(result, dict)
-    assert len(result) == 0
+    assert 'error' in result
+    assert 'invalid patron id' in result['error'].lower()
 
 def test_get_patron_status_report_nonexistent_patron():
     """Test patron status report with non-existent patron."""
     result = get_patron_status_report("999999")
-    
     assert isinstance(result, dict)
-    assert len(result) == 0
+    assert 'patron_id' in result
+    assert result['patron_id'] == "999999"
+    assert len(result['currently_borrowed_books']) == 0
 
 def test_get_patron_status_report_invalid_format():
     """Test patron status report with invalid patron ID format."""
     result = get_patron_status_report("abc123")
-    
     assert isinstance(result, dict)
-    assert len(result) == 0
+    assert 'error' in result
+    assert 'invalid patron id' in result['error'].lower()
 
 def test_get_patron_status_report_none_input():
     """Test patron status report with None input."""
     result = get_patron_status_report(None)
-    
     assert isinstance(result, dict)
-    assert len(result) == 0
+    assert 'error' in result
+    assert 'invalid patron id' in result['error'].lower()
